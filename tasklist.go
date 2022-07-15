@@ -20,7 +20,7 @@ func NewTaskList(tasks ...Task) *TaskList {
 			Colors:            []string{"fgBlue"},
 			StopCharacter:     "✓",
 			StopColors:        []string{"fgGreen"},
-			StopMessage:       "Done!",
+			StopMessage:       " Done!",
 			StopFailCharacter: "✗",
 			StopFailColors:    []string{"fgRed"},
 		},
@@ -35,11 +35,11 @@ func (t *TaskList) Run() error {
 		if err != nil {
 			return err
 		}
-		spinner.Suffix(" " + task.Name + "... ")
+		spinner.Suffix(" " + task.Name)
 		spinner.Start()
 
 		// doing some work
-		err = task.Exec()
+		err = task.Exec(newContext(spinner))
 
 		if err != nil {
 			spinner.StopFailMessage(err.Error())

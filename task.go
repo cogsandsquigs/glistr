@@ -4,5 +4,5 @@ package glistr
 // This function returns an error if it fails. Otherwise, it returns nil.
 type Task struct {
 	Name string
-	Exec func() error
+	Exec func(*Context) error
 }
