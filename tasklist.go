@@ -37,6 +37,7 @@ func (t *TaskList) Run() error {
 		if err != nil {
 			return err
 		}
+
 		spinner.Suffix(" " + task.Name)
 		spinner.Start()
 
