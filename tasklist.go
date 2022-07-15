@@ -1,8 +1,10 @@
 package glistr
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/fatih/color"
 	"github.com/theckman/yacspin"
 )
 
@@ -21,7 +23,7 @@ func NewTaskList(tasks ...Task) *TaskList {
 			Colors:            []string{"fgBlue"},
 			StopCharacter:     "✓",
 			StopColors:        []string{"fgGreen"},
-			StopMessage:       " Done!",
+			StopMessage:       "Done!",
 			StopFailCharacter: "✗",
 			StopFailColors:    []string{"fgRed"},
 		},
@@ -38,18 +40,26 @@ func (t *TaskList) Run() error {
 			return err
 		}
 
-		spinner.Suffix(" " + task.Name)
+		spinner.Suffix(" " + task.Name + "... ")
 		spinner.Start()
 
 		// doing some work
-		err = task.Exec(newContext(spinner))
+		err = func() (err error) {
+			defer func() {
+				if r := recover(); r != nil {
+					err = fmt.Errorf("%v", r)
+				}
+			}()
+			return task.Exec(newContext(spinner))
+		}()
 
 		if err != nil {
-			spinner.StopFailMessage(err.Error())
+			spinner.StopFailMessage(color.RedString(err.Error()))
 			spinner.StopFail()
 
 			return err
 		} else {
+			spinner.StopMessage(color.GreenString(t.config.StopMessage))
 			spinner.Stop()
 		}
 	}
