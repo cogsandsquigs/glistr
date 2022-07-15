@@ -11,6 +11,7 @@ type TaskList struct {
 	config yacspin.Config
 }
 
+// NewTaskList creates a new TaskList.
 func NewTaskList(tasks ...Task) *TaskList {
 	return &TaskList{
 		tasks: tasks,
@@ -27,6 +28,7 @@ func NewTaskList(tasks ...Task) *TaskList {
 	}
 }
 
+// Run runs the tasklist.
 func (t *TaskList) Run() error {
 	for _, task := range t.tasks {
 
